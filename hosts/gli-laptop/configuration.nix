@@ -1,7 +1,15 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ./../../system/systemmodules.nix
+  ];
+
+  systemmodules = {
+    virtualisation.enable = true;
+    bluetooth.enable = true;
+  };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -14,50 +22,6 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
-
-  networking.hostName = "jczornik-gli";
-  networking.networkmanager.enable = true;
-  networking.firewall = {
-    enable = true;
-    # allowedTCPPortRanges = [
-    #   { from = 1; to = 65535; }
-    # ];
-    # allowedUDPPortRanges = [
-    #   { from = 1; to = 65535; }
-    # ];
-  };
-  time.timeZone = "Europe/Warsaw";
-
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-  };
-
-  services.pipewire.wireplumber.extraConfig = {
-    "monitor.bluez.properties" = {
-      "bluez5.enable-sbc-xq" = true;
-      "bluez5.enable-msbc" = true;
-      "bluez5.enable-hw-volume" = true;
-      "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-    };
-  };
-
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-  services.blueman.enable = true;
-
-  services.libinput.enable = true;
-
-  services.cron.enable = true;
-
-  virtualisation.docker = {
-    enable = true;
-    storageDriver = "btrfs";
-  };
 
   # system.autoUpgrade.enable = true;
   # system.autoUpgrade.dates = "daily";
@@ -73,26 +37,6 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
-    pavucontrol
-    htop
-    killall
-    kitty
-    docker-compose
-    cifs-utils
-    nfs-utils
-    qemu
-    sshfs
-    hyprcursor
-    bibata-cursors
-    lm_sensors
-    thinkfan
-    power-profiles-daemon
-    nh
-  ];
 
   fonts.packages = with pkgs; [ font-awesome ubuntu_font_family roboto ];
 

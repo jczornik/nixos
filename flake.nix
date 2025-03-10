@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       # The `follows` keyword in inputs is used for inheritance.
@@ -20,7 +19,7 @@
       jczornik-gli = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./configuration.nix
+          ./hosts/gli-laptop/configuration.nix
 
           # make home-manager as a module of nixos
           # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
