@@ -1,5 +1,5 @@
 let assignWorkspaces = import "./assignWorkspaces.nix";
-in { config, lib, pkgs, ... }:
+in { config, lib, pkgs, inputs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -79,6 +79,8 @@ in { config, lib, pkgs, ... }:
   };
 
   wayland.windowManager.hyprland.enable = true;
+  wayland.windowManager.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+  wayland.windowManager.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
     general = { layout = "master"; };

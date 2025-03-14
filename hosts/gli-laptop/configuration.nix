@@ -1,10 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-    ./../../system/systemmodules.nix
-  ];
+  imports = [ ./hardware-configuration.nix ./../../system/systemmodules.nix ];
 
   systemmodules = {
     virtualisation.enable = true;
@@ -38,7 +35,17 @@
     extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
 
-  fonts.packages = with pkgs; [ font-awesome ubuntu_font_family roboto ];
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [ font-awesome ubuntu_font_family roboto ];
+    # fontconfig = {
+    #   defaultFonts = {
+    #     serif = [ "Ubuntu Serif" ];
+    #     sansSerif = [ "Ubuntu" ];
+    #     monospace = [ "Ubuntu Mono" ];
+    #   };
+    # };
+  };
 
   programs.gnupg.agent = {
     enable = true;
@@ -46,45 +53,17 @@
   };
 
   programs.steam.enable = true;
-  programs.hyprland.enable = true;
 
   services.thinkfan = {
     enable = true;
-    extraArgs = [
-      "experimental"
-      "1"
-    ];
+    extraArgs = [ "experimental" "1" ];
     levels = [
-      [
-        0
-        0
-        35
-      ]
-      [
-        1
-        33
-        45
-      ]
-      [
-        2
-        40
-        50
-      ]
-      [
-        3
-        45
-        55
-      ]
-      [
-        4
-        50
-        60
-      ]
-      [
-        7
-        56
-        200
-      ]
+      [ 0 0 35 ]
+      [ 1 33 45 ]
+      [ 2 40 50 ]
+      [ 3 45 55 ]
+      [ 4 50 60 ]
+      [ 7 56 200 ]
     ];
   };
 
