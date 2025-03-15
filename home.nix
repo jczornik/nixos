@@ -58,7 +58,6 @@ in { config, lib, pkgs, inputs, ... }:
 
       background = {
         monitor = "";
-        # path = "/home/jczornik/Documents/lock.jpg";
         color = "rgba(45, 45, 45, 1.0)";
       };
 
@@ -78,13 +77,19 @@ in { config, lib, pkgs, inputs, ... }:
     };
   };
 
-  wayland.windowManager.hyprland.enable = true;
-  wayland.windowManager.hyprland.package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-  wayland.windowManager.hyprland.portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+  wayland.windowManager.hyprland = {
+    enable = true;
+    plugins = [ inputs.hy3.packages.x86_64-linux.hy3 ];
+    package =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    portalPackage =
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+  };
+
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
-    general = { layout = "master"; };
-    master = { new_on_top = "false"; };
+    general = { layout = "hy3"; };
+    # master = { new_on_top = "false"; };
     bind = [
       "$mod, B, exec, google-chrome-stable"
       "$mod, E, exec, emacs"
@@ -95,9 +100,8 @@ in { config, lib, pkgs, inputs, ... }:
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       "$mod, F, fullscreen, 1"
       "$mod SHIFT, F, fullscreen, 0"
-      "$mod, T, exec, hyprctl dispatch fullscreen 1"
       "$mod, o, exec, hyprlock"
-      "$mod SHIFT, P, exec, grim -g \"$(slurp -d)\" - | wl-copy"
+      ''$mod SHIFT, P, exec, grim -g "$(slurp -d)" - | wl-copy''
 
       # Monitor
       ''
@@ -112,16 +116,24 @@ in { config, lib, pkgs, inputs, ... }:
       "$mod, t, exec, assignWorkspaces"
 
       # Select window
-      "$mod, h, movefocus, l"
-      "$mod, j, movefocus, d"
-      "$mod, k, movefocus, u"
-      "$mod, l, movefocus, r"
+      "$mod, h, hy3:movefocus, l"
+      "$mod, j, hy3:movefocus, d"
+      "$mod, k, hy3:movefocus, u"
+      "$mod, l, hy3:movefocus, r"
 
       # Move window
-      "$mod SHIFT, h, movewindow, l"
-      "$mod SHIFT, j, movewindow, d"
-      "$mod SHIFT, k, movewindow, u"
-      "$mod SHIFT, l, movewindow, r"
+      "$mod SHIFT, h, hy3:movewindow, l"
+      "$mod SHIFT, j, hy3:movewindow, d"
+      "$mod SHIFT, k, hy3:movewindow, u"
+      "$mod SHIFT, l, hy3:movewindow, r"
+
+      "$mod, r, hy3:makegroup, h, ephemeral"
+      "$mod, v, hy3:makegroup, v, ephemeral"
+      "$mod, t, hy3:makegroup, tab, ephemeral"
+
+      "$mod SHIFT, r, hy3:changegroup, h, ephemeral"
+      "$mod SHIFT, v, hy3:changegroup, v, ephemeral"
+      "$mod SHIFT, t, hy3:changegroup, tab, ephemeral"
 
       "$mod, d, exec, rofi -show combi"
     ] ++ (
@@ -134,10 +146,7 @@ in { config, lib, pkgs, inputs, ... }:
           "$mod SHIFT, ${ws}, movetoworkspace, ${toString (x + 1)}"
         ]) 10));
 
-    bindm = [
-      "$mod, mouse:272, movewindow"
-      "$mod, mouse:273, resizewindow 2"
-    ];
+    bindm = [ "$mod, mouse:272, movewindow" "$mod, mouse:273, resizewindow 2" ];
 
     monitor = "eDP-1, 1920x1080, 0x0, 1";
     windowrule = [
@@ -155,7 +164,11 @@ in { config, lib, pkgs, inputs, ... }:
       "XCURSOR_SIZE,20"
     ];
 
-    exec-once = [ "waybar" "hyprctl keyword input:kb_layout pl" "hyprctl setcursor Bibata-Original-Classic 20" ];
+    exec-once = [
+      "waybar"
+      "hyprctl keyword input:kb_layout pl"
+      "hyprctl setcursor Bibata-Original-Classic 20"
+    ];
   };
 
   home.pointerCursor = {
@@ -196,8 +209,6 @@ in { config, lib, pkgs, inputs, ... }:
       tray = { spacing = 10; };
       modules-center = [ "hyprland/window" ];
       modules-left = [ "hyprland/workspaces" "hyprland/mode" ];
-      # modules-right = [ "pulseaudio" "network" "cpu" "memory" "temperature" ]
-      #   ++ [ "clock" "tray" ];
       modules-right =
         [ "pulseaudio" "battery" "network" "cpu" "memory" "clock" ];
       battery = {

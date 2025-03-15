@@ -13,25 +13,18 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    hy3 = {
+      url = "github:outfoxxed/hy3";
+      inputs.hyprland.follows = "hyprland";
+    };
   };
 
   outputs = { nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations = {
       jczornik-gli = nixpkgs.lib.nixosSystem {
-        # pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
           ./hosts/gli-laptop/configuration.nix
-
-          # {
-          #   wayland.windowManager.hyprland = {
-          #     enable = true;
-          #     # set the flake package
-          #     package =
-          #       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-          #     portalPackage =
-          #       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-          #   };
-          # }
 
           home-manager.nixosModules.home-manager
           {
