@@ -89,10 +89,9 @@ in { config, lib, pkgs, inputs, ... }:
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";
     general = { layout = "hy3"; };
-    # master = { new_on_top = "false"; };
     bind = [
       "$mod, B, exec, google-chrome-stable"
-      "$mod, E, exec, emacs"
+      "$mod, E, exec, emacsclient -c"
       "$mod, return, exec, alacritty"
       "$mod SHIFT, Q, killactive,"
       ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
@@ -186,7 +185,15 @@ in { config, lib, pkgs, inputs, ... }:
     theme = "gruvbox-dark-hard";
   };
 
-  programs.emacs = { enable = true; };
+  programs.emacs = {
+    enable = true;
+  };
+  home.file.".emacs.d/init.el".source = ./init.el;
+
+  services.emacs = {
+    enable = true;
+    startWithUserSession = true;
+  };
 
   programs.waybar = {
     enable = true;
