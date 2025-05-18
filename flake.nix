@@ -20,9 +20,10 @@
     };
   };
 
-  outputs = { nixpkgs, home-manager, ... }@inputs: {
+  outputs = inputs@{ nixpkgs, home-manager, ... }: {
     nixosConfigurations = {
       jczornik-gli = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
         modules = [
           ./hosts/gli-laptop/configuration.nix
 

@@ -17,6 +17,7 @@ in { config, lib, pkgs, inputs, ... }:
     slurp
     wl-clipboard
     btop
+    fd
   ];
 
   fonts.fontconfig.enable = true;
@@ -84,7 +85,24 @@ in { config, lib, pkgs, inputs, ... }:
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
     portalPackage =
       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    systemd.enable = true;
+    xwayland.enable = true;
   };
+
+  # xdg = {
+  #   portal = {
+  #     enable = true;
+  #     xdgOpenUsePortal = true;
+  #     config = {
+  #       common.default = ["hyprland"];
+  #       hyprland.default = ["hyprland"];
+  #     };
+  #     extraPortals = [
+  #       # pkgs.xdg-desktop-portal-gtk
+  #       inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+  #     ];
+  #   };
+  # };
 
   wayland.windowManager.hyprland.settings = {
     "$mod" = "SUPER";

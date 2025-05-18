@@ -11,5 +11,6 @@
     thinkfan
     power-profiles-daemon
     nh
+    gnumake
   ];
 }

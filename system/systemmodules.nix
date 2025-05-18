@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, inputs, ... }: {
   imports = [ ./sound.nix ./cli.nix ./virtualisation/module.nix ./remotefs/module.nix];
 
   options = {
@@ -24,5 +24,12 @@
 
     services.libinput.enable = true;
     services.cron.enable = true;
+    security.rtkit.enable = true;
+    programs.hyprland = {
+      enable = true;
+      package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+      xwayland.enable = true;
+    };
   };
 }
