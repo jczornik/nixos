@@ -18,6 +18,7 @@ in { config, lib, pkgs, inputs, ... }:
     wl-clipboard
     btop
     fd
+    nodejs_24
   ];
 
   fonts.fontconfig.enable = true;
@@ -206,7 +207,7 @@ in { config, lib, pkgs, inputs, ... }:
   programs.emacs = {
     enable = true;
   };
-  home.file.".emacs.d/init.el".source = ./init.el;
+  #home.file.".emacs.d/init.el".source = ./init.el;
 
   services.emacs = {
     enable = true;

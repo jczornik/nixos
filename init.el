@@ -118,6 +118,10 @@
 (use-package lsp-mode
   :ensure t)
 
+(use-package lsp-yaml
+  :ensure t
+  :hook (yaml-mode . lsp))
+
 (use-package lsp-pyright
   :ensure t
   :custom (dap-python-debugger 'debugpy)
@@ -221,14 +225,14 @@
   :mode "\\.nix\\'")
 
 ;; Copilot
-;; (use-package copilot
-;;  :quelpa (copilot :fetcher github
-;;                    :repo "copilot-emacs/copilot.el"
-;;                    :branch "main"
-;;                    :files ("dist" "*.el")))
-;; (add-hook 'prog-mode-hook 'copilot-mode)
-;; (define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
-;; (define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
+(use-package copilot
+ :quelpa (copilot :fetcher github
+                   :repo "copilot-emacs/copilot.el"
+                   :branch "main"
+                   :files ("dist" "*.el")))
+(add-hook 'prog-mode-hook 'copilot-mode)
+(define-key copilot-completion-map (kbd "<tab>") 'copilot-accept-completion)
+(define-key copilot-completion-map (kbd "TAB") 'copilot-accept-completion)
 
 (use-package terraform-mode
   :ensure t
