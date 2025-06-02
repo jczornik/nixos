@@ -4,11 +4,12 @@
   options = {
     systemmodules = {
       bluetooth.enable = lib.mkEnableOption "Enable bluetooth services";
+      hostname = lib.mkOption { type = lib.types.string; };
     };
   };
 
   config = {
-    networking.hostName = "jczornik-gli";
+    networking.hostName = options.systemmodules.hostname;
     networking.networkmanager.enable = true;
     networking.firewall = { enable = true; };
     time.timeZone = "Europe/Warsaw";

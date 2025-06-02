@@ -37,6 +37,21 @@
           }
         ];
       };
+      jczornik-personal = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./hosts/jczornik-personal/configuration.nix
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.extraSpecialArgs = { inherit inputs; };
+
+            home-manager.users.jczornik = import ./home.nix;
+          }
+        ];
+      };
     };
   };
 }
