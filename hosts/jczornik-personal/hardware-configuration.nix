@@ -9,7 +9,8 @@
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" "sdhci_pci" ];
-  boot.initrd.kernelModules = [ "dm-snapshot" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" "cryptd" ];
+  boot.initrd.luks.devices."cryptroot".device = "/dev/disk/by-label/NIXOS_LUKS";
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
@@ -25,10 +26,10 @@
       options = [ "subvol=@home" "compress=zstd:6" ];
     };
 
-  fileSystems."/mnt" =
+  fileSystems."/var" =
     { device = "/dev/disk/by-label/NIXOS_ROOT";
       fsType = "btrfs";
-      options = [ "subvol=@mnt" "compress=zstd:6" ];
+      options = [ "subvol=@var" "compress=zstd:6" ];
     };
 
   fileSystems."/boot" =
@@ -37,7 +38,7 @@
       options = [ "fmask=0077" "dmask=0077" ];
     };
 
-  swapDevices = [ { device = "/dev/disk/by-label/NIXOS_SWAP"}
+  swapDevices = [ { device = "/dev/disk/by-label/NIXOS_SWAP"; }
                 ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

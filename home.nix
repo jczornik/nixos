@@ -19,16 +19,18 @@ in { config, lib, pkgs, inputs, ... }:
     btop
     fd
     nodejs_24
+    brightnessctl
+    python3
   ];
 
   fonts.fontconfig.enable = true;
   programs.bash.enable = true;
 
-  programs.git = {
-    enable = true;
-    userName = "Janusz Czornik";
-    userEmail = "jczornik@graylight-imaging.com";
-  };
+  # programs.git = {
+  #   enable = true;
+  #   userName = "Janusz Czornik";
+  #   userEmail = "jczornik@graylight-imaging.com";
+  # };
 
   services.hypridle = {
     enable = true;
@@ -125,7 +127,7 @@ in { config, lib, pkgs, inputs, ... }:
       ''
         $mod SHIFT, m, exec, hyprctl keyword monitor "eDP-1,disable" && hyprctl keyword monitor "HDMI-A-1,2560x1440@144.00Hz,0x0,1"''
 
-      "$mod SHIFT, n, exec, hyprctl keyword monitor eDP-1,1920x1080,2560x0,1 && hyprctl keyword monitor DP-5,2560x1440@144.00Hz,0x0,1"
+      "$mod SHIFT, n, exec, hyprctl keyword monitor eDP-1,1920x1080,2560x0,1 && hyprctl keyword monitor DP-3,2560x1440@144.00Hz,0x0,1"
 
       "$mod, m, exec, hyprctl keyword monitor HDMI-A-1,disable && hyprctl keyword monitor eDP-1,1920x1080,0x0,1"
 

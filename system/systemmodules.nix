@@ -9,7 +9,7 @@
   };
 
   config = {
-    networking.hostName = options.systemmodules.hostname;
+    networking.hostName = config.systemmodules.hostname;
     networking.networkmanager.enable = true;
     networking.firewall = { enable = true; };
     time.timeZone = "Europe/Warsaw";
