@@ -18,6 +18,9 @@
     virtualisation.docker = {
       enable = true;
       storageDriver = "btrfs";
+      extraOptions = ''
+        "--insecure-registry=registry.toolkit.rnd:5000"
+      '';
     };
   };
 }

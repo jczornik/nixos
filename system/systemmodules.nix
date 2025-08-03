@@ -11,7 +11,7 @@
   config = {
     networking.hostName = config.systemmodules.hostname;
     networking.networkmanager.enable = true;
-    networking.firewall = { enable = true; };
+    networking.firewall = { enable = false; };
     time.timeZone = "Europe/Warsaw";
 
     i18n.defaultLocale = "en_US.UTF-8";
