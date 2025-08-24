@@ -1,5 +1,5 @@
 let assignWorkspaces = import "./assignWorkspaces.nix";
-in { config, lib, pkgs, inputs, ... }:
+in { config, lib, pkgs, inputs, stylix, ... }:
 
 {
   home.packages = with pkgs; [
@@ -22,6 +22,14 @@ in { config, lib, pkgs, inputs, ... }:
     brightnessctl
     python3
   ];
+
+  programs.alacritty = {
+    enable = true;
+  };
+
+  programs.btop = {
+    enable = true;
+  };
 
   fonts.fontconfig.enable = true;
   programs.bash.enable = true;
@@ -62,7 +70,7 @@ in { config, lib, pkgs, inputs, ... }:
 
       background = {
         monitor = "";
-        color = "rgba(45, 45, 45, 1.0)";
+        # color = "rgba(45, 45, 45, 1.0)";
       };
 
       label = {
@@ -70,7 +78,7 @@ in { config, lib, pkgs, inputs, ... }:
         text = "Talk is cheap. Show me the code.";
         text_align =
           "center"; # center/right or any value for default left. multi-line text alignment inside label container
-        color = "rgba(200, 200, 200, 1.0)";
+        # color = "rgba(200, 200, 200, 1.0)";
         font_size = 25;
         rotate = 0;
 
@@ -111,7 +119,7 @@ in { config, lib, pkgs, inputs, ... }:
     "$mod" = "SUPER";
     general = { layout = "hy3"; };
     bind = [
-      "$mod, B, exec, google-chrome-stable"
+      "$mod, B, exec, google-chrome-stable --ozone-platform-hint=auto --ignore-gpu-blocklist --enable-gpu-rasterization --enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks --disable-features=UseChromeOSDirectVideoDecoder"
       "$mod, E, exec, emacsclient -c"
       "$mod, return, exec, alacritty"
       "$mod SHIFT, Q, killactive,"
@@ -199,6 +207,8 @@ in { config, lib, pkgs, inputs, ... }:
     size = 20;
   };
 
+  stylix.targets.rofi.enable = false;
+
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
@@ -216,18 +226,26 @@ in { config, lib, pkgs, inputs, ... }:
     startWithUserSession = true;
   };
 
+  stylix.targets.waybar = {
+    enable = true;
+    addCss = true;
+    # font = "emoji";
+  };
+
   programs.waybar = {
     enable = true;
     style = ''
-      ${builtins.readFile "${pkgs.waybar}/etc/xdg/waybar/style.css"}
       * {
-        font-family: "Roboto", "Font Awesome 6 Free", sans-serif;
-        font-size: 13px;
+        font-family: "Ubuntu Mono", "Font Awesome 6 Free", sans-serif;
+        font-size: 10pt;
       }
 
-      #workspaces button.active {
-         background-color: #64727D;
-         box-shadow: inset 0 -3px #ffffff;
+      #workspaces button {
+        font-family: "Ubuntu Mono", "Font Awesome 6 Free", sans-serif;
+        font-size: 30pt;
+      }
+      #workspaces button {
+        padding: 1pt 5pt;
       }
     '';
     settings = [{
@@ -303,7 +321,7 @@ in { config, lib, pkgs, inputs, ... }:
         };
         format = "{icon}";
         format-icons = {
-          "1" = "";
+          "1" = "";
           "2" = "";
           "3" = "";
           "9" = "";

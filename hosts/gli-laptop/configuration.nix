@@ -42,7 +42,7 @@
 
   fonts = {
     enableDefaultPackages = true;
-    packages = with pkgs; [ font-awesome ubuntu_font_family roboto ];
+    packages = with pkgs; [ font-awesome ubuntu_font_family roboto dejavu_fonts ];
     # fontconfig = {
     #   defaultFonts = {
     #     serif = [ "Ubuntu Serif" ];
@@ -94,7 +94,7 @@
   networking.modemmanager.enable = true;
 
   hardware.enableRedistributableFirmware = true;
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = ["modeseting" "nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -102,24 +102,28 @@
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+    prime = {
+      offload.enable = true;
+      offload.enableOffloadCmd = true;
+      # sync.enable = true;
+		  intelBusId = "PCI:0:2:0";
+		  nvidiaBusId = "PCI:45:0:0";
+	  };
   };
   hardware.graphics = {
     enable = true;
-    # enable32Bit = true; # Enable 32-bit DRI3 support
-    # extraPackages = with pkgs; [
-    #   intel-media-driver
-    #   vaapiVdpau
-    #   vaapiIntel
-    #   mesa
-    #   libvdpau-va-gl
-    #   libva-utils
-    # ];
+    extraPackages = with pkgs; [
+      nvidia-vaapi-driver
+      intel-media-driver # LIBVA_DRIVER_NAME=iHD
+      vaapiIntel
+      libvdpau-va-gl
+    ];
   };
 
-  hardware.nvidia.prime = {
-		intelBusId = "PCI:0:2:0";
-		nvidiaBusId = "PCI:45:0:0";
-	};
+  # environment.sessionVariables = { LIBVA_DRIVER_NAME = "nvidia"; };
+  services.frigate.vaapiDriver = "nvidia";
+
+  # hardware.nvidia.
 
   # environment.variables.EGL_PLATFORM = "nvidia";
   # environment.variables.EGL_PLATFORM_TYPE = "nvidia";
@@ -127,6 +131,29 @@
   # services.frigate.vaapiDriver = "nvidia";
 
   services.power-profiles-daemon.enable = true;
+
+  stylix = {
+    enable = true;
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    image = pkgs.fetchurl {
+      url = "https://gruvbox-wallpapers.pages.dev/wallpapers/mix/1.jpg";
+      hash = "sha256-24PfrrLDxLcjJIrPGj1/qoIBgsV8Xmv3YcjeTkwnYJg=";
+    };
+    fonts = {
+      serif = {
+        package = pkgs.ubuntu_font_family;
+        name = "Ubuntu Serif";
+      };
+      sansSerif = {
+        package = pkgs.ubuntu_font_family;
+        name = "Ubuntu";
+      };
+      monospace = {
+        package = pkgs.ubuntu_font_family;
+        name = "Ubuntu Mono";
+      };
+    };
+  };
 
   system.stateVersion = "24.11"; # Did you read the comment?
 }
