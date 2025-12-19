@@ -16,13 +16,13 @@
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/bf873b90-9fc6-4956-9a79-fed9f4c84502";
       fsType = "btrfs";
-      options = [ "subvol=@root" ];
+      options = [ "subvol=@root" "compress=zstd:6" ];
     };
 
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/d1e014b8-f4e0-403d-b050-88d44e103fe3";
       fsType = "btrfs";
-      options = [ "subvol=@home" ];
+      options = [ "subvol=@home" "compress=zstd:6" ];
     };
 
   fileSystems."/boot" =

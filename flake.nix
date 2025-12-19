@@ -2,20 +2,20 @@
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.50.0";
+    # hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.52.0";
 
-    hy3 = {
-      url = "github:outfoxxed/hy3/refs/tags/hl0.50.0";
-      inputs.hyprland.follows = "hyprland";
-    };
+    # hy3 = {
+    #   url = "github:outfoxxed/hy3/refs/tags/hl0.52.0";
+    #   inputs.hyprland.follows = "hyprland";
+    # };
 
-    stylix.url = "github:nix-community/stylix/release-25.05";
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs = inputs@{ nixpkgs, home-manager, stylix, ... }: {

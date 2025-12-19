@@ -36,7 +36,7 @@
 
   fonts = {
     enableDefaultPackages = true;
-    packages = with pkgs; [ font-awesome ubuntu_font_family roboto ];
+    packages = with pkgs; [ font-awesome ubuntu-classic roboto ];
     # fontconfig = {
     #   defaultFonts = {
     #     serif = [ "Ubuntu Serif" ];

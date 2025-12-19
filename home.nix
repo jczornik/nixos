@@ -11,7 +11,7 @@ in { config, lib, pkgs, inputs, stylix, ... }:
     google-chrome
     ncdu
     remmina
-    freerdp3
+    freerdp
     dig
     grim
     slurp
@@ -21,18 +21,78 @@ in { config, lib, pkgs, inputs, stylix, ... }:
     nodejs_24
     brightnessctl
     python3
+    dunst
+    direnv
+    nushell
+    carapace
+    starship
+    zoxide
   ];
 
-  programs.alacritty = {
-    enable = true;
-  };
+  services.dunst.enable = true;
 
-  programs.btop = {
-    enable = true;
-  };
+  programs.alacritty = { enable = true; };
+
+  programs.btop = { enable = true; };
+
+  # programs.direnv = {
+  #   enable = true;
+
+  # };
 
   fonts.fontconfig.enable = true;
   programs.bash.enable = true;
+
+  programs = {
+    # 1. Enable Carapace with automatic integration
+    carapace = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    # 2. Use the native Direnv module (replaces your manual hook)
+    direnv = {
+      enable = true;
+      enableNushellIntegration =
+        true; # Automatically handles the hook/env loading
+      enableBashIntegration = true;
+      nix-direnv.enable = true; # Highly recommended for caching
+    };
+
+    zoxide = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    starship = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+  };
+
+  programs.nushell = {
+    enable = true;
+    # 3. Use specific updates instead of replacing the whole $env.config
+    extraConfig = ''
+      $env.config.show_banner = false
+
+      $env.config.completions.case_sensitive = false
+      $env.config.completions.quick = true
+      $env.config.completions.partial = true
+      $env.config.completions.algorithm = "fuzzy"
+
+      $env.config.completions.external = {
+        enable: true
+        max_results: 100
+        # Do NOT manually set 'completer' here.
+        # The carapace.enableNushellIntegration handles the bridge automatically.
+      }
+    '';
+
+    plugins = [
+      pkgs.nushellPlugins.gstat
+    ];
+  };
 
   # programs.git = {
   #   enable = true;
@@ -91,13 +151,15 @@ in { config, lib, pkgs, inputs, stylix, ... }:
 
   wayland.windowManager.hyprland = {
     enable = true;
-    plugins = [ inputs.hy3.packages.x86_64-linux.hy3 ];
-    package =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    portalPackage =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    # plugins = [ inputs.hy3.packages.x86_64-linux.hy3 ];
+    # package =
+    #  inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+    # portalPackage =
+    #  inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+    portalPackage = pkgs.xdg-desktop-portal-hyprland;
+    plugins = [ pkgs.hyprlandPlugins.hy3 ];
     systemd.enable = true;
-    xwayland.enable = true;
+    xwayland.enable = false;
   };
 
   # xdg = {
@@ -121,7 +183,7 @@ in { config, lib, pkgs, inputs, stylix, ... }:
     bind = [
       "$mod, B, exec, google-chrome-stable --ozone-platform-hint=auto --ignore-gpu-blocklist --enable-gpu-rasterization --enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks --disable-features=UseChromeOSDirectVideoDecoder"
       "$mod, E, exec, emacsclient -c"
-      "$mod, return, exec, alacritty"
+      "$mod, return, exec, alacritty -e nu"
       "$mod SHIFT, Q, killactive,"
       ", XF86AudioRaiseVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%+"
       ", XF86AudioLowerVolume, exec, wpctl set-volume -l 1.4 @DEFAULT_AUDIO_SINK@ 5%-"
@@ -133,9 +195,12 @@ in { config, lib, pkgs, inputs, stylix, ... }:
 
       # Monitor
       ''
-        $mod SHIFT, m, exec, hyprctl keyword monitor "eDP-1,disable" && hyprctl keyword monitor "HDMI-A-1,2560x1440@144.00Hz,0x0,1"''
+        $mod SHIFT, m, exec, hyprctl keyword monitor "eDP-1,disable" && hyprctl keyword monitor "HDMI-A-1,2560x1440@144.00Hz,0x0,1"
+      ''
 
-      "$mod SHIFT, n, exec, hyprctl keyword monitor eDP-1,1920x1080,2560x0,1 && hyprctl keyword monitor DP-3,2560x1440@144.00Hz,0x0,1"
+      ''
+        $mod SHIFT, n, exec, hyprctl keyword monitor eDP-1,1920x1080,2560x0,1 && hyprctl keyword monitor DP-3,2560x1440@144.00Hz,0x0,1 && hyprctl keyword workspace 1, monitor:DP-3 && hyprctl keyword workspace 3, monitor:DP-3 && hyprctl keyword workspace 4, monitor:DP-3 && hyprctl keyword workspace 5, monitor:DP-3 && hyprctl keyword workspace 6, monitor:DP-3 && hyprctl keyword workspace 7, monitor:DP-3 && hyprctl keyword workspace 8, monitor:eDP-1 && hyprctl keyword workspace 9, monitor:eDP-1 && hyprctl keyword workspace 10, monitor:eDP-1
+      ''
 
       "$mod, m, exec, hyprctl keyword monitor HDMI-A-1,disable && hyprctl keyword monitor eDP-1,1920x1080,0x0,1"
 
@@ -186,6 +251,7 @@ in { config, lib, pkgs, inputs, stylix, ... }:
     # windowrulev2 = "forceinput, class:(Rofi)$";
 
     env = [
+      #"AQ_DRM_DEVICES,/dev/dri/card0"
       "HYPRCURSOR_THEME,Bibata-Original-Classic"
       "HYPRCURSOR_SIZE,20"
       "XCURSOR_THEME,Bibata-Original-Classic"
@@ -211,13 +277,15 @@ in { config, lib, pkgs, inputs, stylix, ... }:
 
   programs.rofi = {
     enable = true;
-    package = pkgs.rofi-wayland;
+    package = pkgs.rofi;
     location = "center";
     theme = "gruvbox-dark-hard";
   };
 
+  stylix.targets.emacs.enable = false;
   programs.emacs = {
     enable = true;
+    package = pkgs.emacs-pgtk;
   };
   #home.file.".emacs.d/init.el".source = ./init.el;
 

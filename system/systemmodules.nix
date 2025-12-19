@@ -4,7 +4,7 @@
   options = {
     systemmodules = {
       bluetooth.enable = lib.mkEnableOption "Enable bluetooth services";
-      hostname = lib.mkOption { type = lib.types.string; };
+      hostname = lib.mkOption { type = lib.types.str; };
     };
   };
 
@@ -28,9 +28,11 @@
     security.rtkit.enable = true;
     programs.hyprland = {
       enable = true;
-      package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
-      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-      xwayland.enable = true;
+      # package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
+      # portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      xwayland.enable = false;
     };
   };
 }

@@ -3,7 +3,7 @@
     systemmodules.virtualisation.docker = {
         enable = lib.mkEnableOption "Install docker utils";
         storageDriver = lib.mkOption {
-          type = lib.types.string;
+          type = lib.types.str;
           default = null;
           description = "Storage driver for docker";
         };
@@ -18,9 +18,6 @@
     virtualisation.docker = {
       enable = true;
       storageDriver = "btrfs";
-      extraOptions = ''
-        "--insecure-registry=registry.toolkit.rnd:5000"
-      '';
     };
   };
 }
