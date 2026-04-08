@@ -169,10 +169,10 @@
       pkgs.xdg-desktop-portal-gnome
     ];
     config = {
-      common.default = "*";
       niri = {
-        # Use GTK for file pickers, but Gnome for screen sharing
-        default = [ "gtk" "gnome" ];
+        # Use GTK for standard things (like the file picker and dark mode settings)
+        default = [ "gtk" ];
+        # Explicitly use GNOME *only* for screen sharing and screenshots
         "org.freedesktop.impl.portal.Screencast" = "gnome";
         "org.freedesktop.impl.portal.Screenshot" = "gnome";
       };

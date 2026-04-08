@@ -22,7 +22,7 @@
               "${config.stylix.image}"
             ];
           }
-          { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
+          # { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
         ];
 
         input.keyboard.xkb = { layout = "pl"; };
@@ -230,7 +230,7 @@
 
     home.packages = with pkgs; [
       pkgs.swaybg
-      pkgs.xwayland-satellite
+      # pkgs.xwayland-satellite
     ];
 
   };

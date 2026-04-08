@@ -38,12 +38,12 @@
     security.polkit.enable = true;
     security.pam.services.swaylock = {};
 
-    xdg.portal = {
-      enable = true;
-      wlr.enable = true;
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-      config.common.default = "*";
-    };
+    # xdg.portal = {
+    #   enable = true;
+    #   wlr.enable = true;
+    #   extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    #   config.common.default = "*";
+    # };
 
     environment.systemPackages = [
       pkgs.tuigreet
