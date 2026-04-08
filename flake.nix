@@ -7,18 +7,14 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # hyprland.url = "github:hyprwm/Hyprland/refs/tags/v0.52.0";
-
-    # hy3 = {
-    #   url = "github:outfoxxed/hy3/refs/tags/hl0.52.0";
-    #   inputs.hyprland.follows = "hyprland";
-    # };
-
     stylix.url = "github:nix-community/stylix";
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, stylix, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, stylix, niri, ... }: {
     nixosConfigurations = {
       jczornik-gli = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -26,12 +22,19 @@
           ./hosts/gli-laptop/configuration.nix
           stylix.nixosModules.stylix
 
+          ({ config, pkgs, ... }: {
+            nixpkgs.overlays = [ niri.overlays.niri ];
+          })
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs; };
             home-manager.users.jczornik = import ./home.nix;
+            home-manager.sharedModules = [
+              niri.homeModules.niri
+            ];
           }
         ];
       };

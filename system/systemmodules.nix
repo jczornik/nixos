@@ -11,7 +11,7 @@
   config = {
     networking.hostName = config.systemmodules.hostname;
     networking.networkmanager.enable = true;
-    networking.firewall = { enable = false; };
+    networking.firewall = { enable = true; };
     time.timeZone = "Europe/Warsaw";
 
     i18n.defaultLocale = "en_US.UTF-8";
@@ -25,14 +25,28 @@
 
     services.libinput.enable = true;
     services.cron.enable = true;
-    security.rtkit.enable = true;
-    programs.hyprland = {
+    services.greetd = {
       enable = true;
-      # package = inputs.hyprland.packages."${pkgs.stdenv.hostPlatform.system}".hyprland;
-      # portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-
-      portalPackage = pkgs.xdg-desktop-portal-hyprland;
-      xwayland.enable = false;
+      useTextGreeter = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.tuigreet}/bin/tuigreet --cmd niri-session";
+        };
+      };
     };
+    security.rtkit.enable = true;
+    security.polkit.enable = true;
+    security.pam.services.swaylock = {};
+
+    xdg.portal = {
+      enable = true;
+      wlr.enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      config.common.default = "*";
+    };
+
+    environment.systemPackages = [
+      pkgs.tuigreet
+    ];
   };
 }

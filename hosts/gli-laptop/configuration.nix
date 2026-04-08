@@ -2,6 +2,8 @@
 
 {
   imports = [ ./hardware-configuration.nix ./../../system/systemmodules.nix ];
+  nixpkgs.config.permittedInsecurePackages = [
+  ];
 
   systemmodules = {
     virtualisation.enable = true;
@@ -10,6 +12,8 @@
   };
 
   boot.loader.systemd-boot.enable = true;
+  boot.loader.timeout = 30;
+  boot.loader.systemd-boot.consoleMode = "max";
   boot.loader.efi.canTouchEfiVariables = true;
   boot.initrd.luks.devices = {
     root = {
@@ -28,9 +32,6 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
   nix.settings = {
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
 
   # system.autoUpgrade.enable = true;
@@ -46,44 +47,12 @@
   users.users.jczornik = {
     isNormalUser = true;
     shell = pkgs.bash;
-    extraGroups = [ "wheel" "docker" "networkmanager" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" "networkmanager" "firezone" ]; # Enable ‘sudo’ for the user.
   };
-
-  # systemd.services.mask-thinkpad-lapmode = {
-  #   description = "Mask ThinkPad Lap Mode Sensor (Force Desk Mode)";
-  #   after = [ "sys-devices-platform-thinkpad_acpi.device" "multi-user.target" ];
-  #   wantedBy = [ "multi-user.target" ];
-
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #     RemainAfterExit = true;
-  #     ExecStart = pkgs.writeShellScript "mask-lapmode" ''
-  #       TARGET="/sys/devices/platform/thinkpad_acpi/dytc_lapmode"
-
-  #       # Only proceed if the ThinkPad driver has actually created the file
-  #       if [ -f "$TARGET" ]; then
-  #         echo 0 > /run/thinkpad_lapmode_fake
-  #         ${pkgs.util-linux}/bin/mount --bind /run/thinkpad_lapmode_fake "$TARGET"
-  #         echo "ThinkPad Lap Mode sensor masked successfully."
-  #       else
-  #         echo "ThinkPad ACPI lapmode file not found. Skipping."
-  #       fi
-  #     '';
-
-  #     ExecStop = "${pkgs.util-linux}/bin/umount /sys/devices/platform/thinkpad_acpi/dytc_lapmode || true";
-  #   };
-  # };
 
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [ font-awesome ubuntu-classic roboto dejavu_fonts nerd-fonts.symbols-only];
-    # fontconfig = {
-    #   defaultFonts = {
-    #     serif = [ "Ubuntu Serif" ];
-    #     sansSerif = [ "Ubuntu" ];
-    #     monospace = [ "Ubuntu Mono" ];
-    #   };
-    # };
   };
 
   programs.gnupg.agent = {
@@ -92,17 +61,16 @@
   };
 
   programs.steam.enable = true;
+  services.firezone.gui-client = {
+    enable = true;
+    name = "jczonik-gli-client";
+    allowedUsers = [ "jczornik" ];
+  };
 
   services.thinkfan = {
     enable = true;
-    # extraArgs = [ "experimental" "1" ];
     levels = [
       [ "level auto" 0 3000 ]
-      # [ 1 33 45 ]
-      # [ 2 30 50 ]
-      # [ 3 45 50 ]
-      # [ 4 45 60 ]
-      # [ 7 56 200 ]
     ];
   };
 
@@ -124,12 +92,15 @@
     nfs-utils
   ];
 
-  # services.modemmanager.enable = true;
 
   networking.modemmanager.enable = true;
+  networking.networkmanager.enable = true;
+  networking.networkmanager.dns = "systemd-resolved";
+  services.resolved.enable = true;
+
 
   hardware.enableRedistributableFirmware = true;
-  services.xserver.videoDrivers = ["modeseting" "nvidia"];
+  services.xserver.videoDrivers = ["modesetting" "nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
@@ -186,6 +157,24 @@
       monospace = {
         package = pkgs.ubuntu-classic;
         name = "Ubuntu Mono";
+      };
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+      pkgs.xdg-desktop-portal-gnome
+    ];
+    config = {
+      common.default = "*";
+      niri = {
+        # Use GTK for file pickers, but Gnome for screen sharing
+        default = [ "gtk" "gnome" ];
+        "org.freedesktop.impl.portal.Screencast" = "gnome";
+        "org.freedesktop.impl.portal.Screenshot" = "gnome";
       };
     };
   };
