@@ -8,8 +8,9 @@ in { config, lib, pkgs, inputs, stylix, ... }:
   ];
 
   home.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
+    # NIXOS_OZONE_WL = "1";
     EDITOR = "emacsclient -c";
+    LIBVA_DRIVER_NAME = "iHD";
   };
   home.packages = with pkgs; [
     alacritty

@@ -1,5 +1,6 @@
 { pkgs, lib, config, inputs, ... }: {
-  imports = [ ./sound.nix ./cli.nix ./virtualisation/module.nix ./remotefs/module.nix];
+  imports =
+    [ ./sound.nix ./cli.nix ./virtualisation/module.nix ./remotefs/module.nix ];
 
   options = {
     systemmodules = {
@@ -36,17 +37,34 @@
     };
     security.rtkit.enable = true;
     security.polkit.enable = true;
-    security.pam.services.swaylock = {};
+    security.pam.services.swaylock = { };
 
-    # xdg.portal = {
-    #   enable = true;
-    #   wlr.enable = true;
-    #   extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    #   config.common.default = "*";
-    # };
+    programs.niri.enable = true;
 
-    environment.systemPackages = [
-      pkgs.tuigreet
-    ];
+    xdg.autostart.enable = true;
+    xdg.portal = {
+      enable = true;
+      # wlr.enable = true;
+      # xdgOpenUsePortal = true;
+      # extraPortals = [
+      #   pkgs.xdg-desktop-portal
+      #   pkgs.xdg-desktop-portal-gtk
+      #   pkgs.xdg-desktop-portal-gnome
+      # ];
+      # config = {
+      #   common = { default = "*"; };
+      #   niri = {
+      #     # Use GTK for standard things (like the file picker and dark mode settings)
+      #     default = [ "gtk" ];
+      #     # Explicitly use GNOME *only* for screen sharing and screenshots
+      #     "org.freedesktop.impl.portal.Screencast" = [ "gnome" ];
+      #     "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
+      #     # "org.freedesktop.impl.portal.FileChooser" = [ "gtk" "wlr" ];
+      #     "org.freedesktop.impl.portal.OpenURI" = [ "gtk" "wlr" ];
+      #   };
+      # };
+    };
+
+    environment.systemPackages = [ pkgs.tuigreet ];
   };
 }

@@ -107,11 +107,11 @@
     powerManagement.finegrained = false;
     open = false;
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
     prime = {
       offload.enable = true;
       offload.enableOffloadCmd = true;
-      # sync.enable = true;
+      # sync.enable = false;
 		  intelBusId = "PCI:0:2:0";
 		  nvidiaBusId = "PCI:45:0:0";
 	  };
@@ -126,8 +126,7 @@
     ];
   };
 
-  # environment.sessionVariables = { LIBVA_DRIVER_NAME = "nvidia"; };
-  services.frigate.vaapiDriver = "nvidia";
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   # hardware.nvidia.
 
@@ -157,24 +156,6 @@
       monospace = {
         package = pkgs.ubuntu-classic;
         name = "Ubuntu Mono";
-      };
-    };
-  };
-
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
-    ];
-    config = {
-      niri = {
-        # Use GTK for standard things (like the file picker and dark mode settings)
-        default = [ "gtk" ];
-        # Explicitly use GNOME *only* for screen sharing and screenshots
-        "org.freedesktop.impl.portal.Screencast" = "gnome";
-        "org.freedesktop.impl.portal.Screenshot" = "gnome";
       };
     };
   };

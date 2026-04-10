@@ -5,119 +5,210 @@
     lib.mkEnableOption "Niri Wayland Compositor";
 
   config = lib.mkIf config.custom.desktop.niri.enable {
-    programs.niri = {
-      enable = true;
-      package = pkgs.niri-unstable;
-      settings = {
-        prefer-no-csd = true;
+    # programs.niri = {
+    #   enable = true;
+    #   # package = pkgs.niri-unstable;
+    #   settings = {
+    #     prefer-no-csd = true;
 
-        spawn-at-startup = [
-          { command = [ "${pkgs.waybar}/bin/waybar" ]; }
-          {
-            command = [
-              "${pkgs.swaybg}/bin/swaybg"
-              "-m"
-              "fill"
-              "-i"
-              "${config.stylix.image}"
-            ];
+    #     spawn-at-startup = [
+    #       { command = [ "${pkgs.waybar}/bin/waybar" ]; }
+    #       {
+    #         command = [
+    #           "${pkgs.swaybg}/bin/swaybg"
+    #           "-m"
+    #           "fill"
+    #           "-i"
+    #           "${config.stylix.image}"
+    #         ];
+    #       }
+    #       {
+    #         command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ];
+    #       }
+    #       # {
+    #       #   command = [
+    #       #     "bash" "-c" "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP PATH && systemctl --user restart xdg-desktop-portal.service"
+    #       #   ];
+    #       # }
+    #     ];
+
+    #     input.keyboard.xkb = { layout = "pl"; };
+
+    #     binds = {
+    #       # Programs
+    #       "Mod+Shift+e".action.spawn = [ "emacsclient" "-c" ];
+    #       "Mod+Shift+b".action.spawn = [
+    #         "google-chrome-stable"
+    #         "--ozone-platform-hint=auto"
+    #         "--ignore-gpu-blocklist"
+    #         "--enable-gpu-rasterization"
+    #         "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks"
+    #         "--disable-features=UseChromeOSDirectVideoDecoder"
+    #         "--ozone-platform=wayland"
+    #       ];
+    #       "Mod+Return".action.spawn = "alacritty";
+    #       "Mod+d".action.spawn = [ "rofi" "-show" "combi" ];
+    #       "Mod+Shift+Q".action.close-window = [ ];
+
+    #       # Movement
+    #       "Mod+h".action.focus-column-left = [ ];
+    #       "Mod+l".action.focus-column-right = [ ];
+    #       "Mod+j".action.focus-window-or-workspace-down = [ ];
+    #       "Mod+k".action.focus-window-or-workspace-up = [ ];
+    #       "Mod+f".action.fullscreen-window = [ ];
+
+    #       "Mod+Shift+h".action.move-column-left = [ ];
+    #       "Mod+Shift+l".action.move-column-right = [ ];
+    #       "Mod+Shift+j".action.move-window-down-or-to-workspace-down = [ ];
+    #       "Mod+Shift+k".action.move-window-up-or-to-workspace-up = [ ];
+    #       "Mod+w".action.toggle-column-tabbed-display = [ ];
+    #       "Mod+Shift+Comma".action.consume-window-into-column = [ ];
+    #       "Mod+Shift+Period".action.expel-window-from-column = [ ];
+
+    #       "Mod+BracketRight".action.focus-monitor-right = [ ];
+    #       "Mod+BracketLeft".action.focus-monitor-left = [ ];
+    #       "Mod+Shift+BracketRight".action.move-column-to-monitor-right = [ ];
+    #       "Mod+Shift+BracketLeft".action.move-column-to-monitor-left = [ ];
+
+    #       "Mod+Minus".action.set-column-width = "-10%";
+    #       "Mod+Equal".action.set-column-width = "+10%";
+    #       "Mod+m".action.maximize-column = [ ];
+
+    #       # Workspaces
+    #       "Mod+1".action.focus-workspace = 1;
+    #       "Mod+2".action.focus-workspace = 2;
+    #       "Mod+3".action.focus-workspace = 3;
+    #       "Mod+4".action.focus-workspace = 4;
+    #       "Mod+5".action.focus-workspace = 5;
+    #       "Mod+6".action.focus-workspace = 6;
+    #       "Mod+7".action.focus-workspace = 7;
+    #       "Mod+8".action.focus-workspace = 8;
+    #       "Mod+9".action.focus-workspace = 9;
+
+    #       "Mod+Shift+1".action.move-column-to-workspace = 1;
+    #       "Mod+Shift+2".action.move-column-to-workspace = 2;
+    #       "Mod+Shift+3".action.move-column-to-workspace = 3;
+    #       "Mod+Shift+4".action.move-column-to-workspace = 4;
+    #       "Mod+Shift+5".action.move-column-to-workspace = 5;
+    #       "Mod+Shift+6".action.move-column-to-workspace = 6;
+    #       "Mod+Shift+7".action.move-column-to-workspace = 7;
+    #       "Mod+Shift+8".action.move-column-to-workspace = 8;
+    #       "Mod+Shift+9".action.move-column-to-workspace = 9;
+
+    #       "Mod+Escape".action.toggle-overview = [ ];
+    #     };
+
+    #     outputs = let cfg = config.programs.niri.settings.outputs;
+    #     in {
+    #       "eDP-1" = {
+    #         enable = true;
+    #         mode.width = 3840;
+    #         mode.height = 2160;
+    #         mode.refresh = 60.0;
+    #         position.x = 2560;
+    #         position.y = 0;
+    #       };
+    #       "GIGA-BYTE TECHNOLOGY CO., LTD. M28U 21430B002974" = {
+    #         enable = true;
+    #         mode.width = 2560;
+    #         mode.height = 1440;
+    #         mode.refresh = 59.951;
+    #         position.x = 0;
+    #         position.y = 0;
+    #         scale = 1;
+    #       };
+    #     };
+
+    #     window-rules = [{
+    #       matches = [{ app-id = "^emacs$"; }];
+    #       default-column-width = { proportion = 0.8; };
+    #     }];
+    #   };
+    # };
+
+    xdg.configFile."niri/config.kdl".text = ''
+      prefer-no-csd
+
+      spawn-at-startup "${pkgs.waybar}/bin/waybar"
+      spawn-at-startup "${pkgs.swaybg}/bin/swaybg" "-m" "fill" "-i" "${config.stylix.image}"
+
+      input {
+          keyboard {
+              xkb {
+                  layout "pl"
+              }
           }
-          # { command = [ "${pkgs.xwayland-satellite}/bin/xwayland-satellite" ]; }
-        ];
+      }
 
-        input.keyboard.xkb = { layout = "pl"; };
+      output "eDP-1" {
+          mode "3840x2160@60.0"
+          position x=2560 y=0
+      }
 
-        binds = {
-          # Programs
-          "Mod+Shift+e".action.spawn = [ "emacsclient" "-c" ];
-          "Mod+Shift+b".action.spawn = [
-            "google-chrome-stable"
-            "--ozone-platform-hint=auto"
-            "--ignore-gpu-blocklist"
-            "--enable-gpu-rasterization"
-            "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks"
-            "--disable-features=UseChromeOSDirectVideoDecoder"
-            "--ozone-platform=wayland"
-          ];
-          "Mod+Return".action.spawn = "alacritty";
-          "Mod+d".action.spawn = [ "rofi" "-show" "combi" ];
-          "Mod+Shift+Q".action.close-window = [ ];
+      output "GIGA-BYTE TECHNOLOGY CO., LTD. M28U 21430B002974" {
+          mode "2560x1440@59.951"
+          position x=0 y=0
+          scale 1.0
+      }
 
-          # Movement
-          "Mod+h".action.focus-column-left = [ ];
-          "Mod+l".action.focus-column-right = [ ];
-          "Mod+j".action.focus-window-or-workspace-down = [ ];
-          "Mod+k".action.focus-window-or-workspace-up = [ ];
-          "Mod+f".action.fullscreen-window = [ ];
+      window-rule {
+          match app-id="^emacs$"
+          default-column-width { proportion 0.8; }
+      }
 
-          "Mod+Shift+h".action.move-column-left = [ ];
-          "Mod+Shift+l".action.move-column-right = [ ];
-          "Mod+Shift+j".action.move-window-down-or-to-workspace-down = [ ];
-          "Mod+Shift+k".action.move-window-up-or-to-workspace-up = [ ];
-          "Mod+w".action.toggle-column-tabbed-display = [ ];
-          "Mod+Shift+Comma".action.consume-window-into-column = [ ];
-          "Mod+Shift+Period".action.expel-window-from-column = [ ];
+      binds {
+          Mod+Shift+E { spawn "emacsclient" "-c"; }
+          Mod+Shift+B { spawn "google-chrome-stable" "--ozone-platform-hint=auto" "--ignore-gpu-blocklist" "--enable-gpu-rasterization" "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks" "--disable-features=UseChromeOSDirectVideoDecoder" "--ozone-platform=wayland"; }
+          Mod+Return { spawn "alacritty"; }
+          Mod+D { spawn "rofi" "-show" "combi"; }
+          Mod+Shift+Q { close-window; }
 
-          "Mod+BracketRight".action.focus-monitor-right = [ ];
-          "Mod+BracketLeft".action.focus-monitor-left = [ ];
-          "Mod+Shift+BracketRight".action.move-column-to-monitor-right = [ ];
-          "Mod+Shift+BracketLeft".action.move-column-to-monitor-left = [ ];
+          Mod+H { focus-column-left; }
+          Mod+L { focus-column-right; }
+          Mod+J { focus-window-or-workspace-down; }
+          Mod+K { focus-window-or-workspace-up; }
+          Mod+F { fullscreen-window; }
 
-          "Mod+Minus".action.set-column-width = "-10%";
-          "Mod+Equal".action.set-column-width = "+10%";
-          "Mod+m".action.maximize-column = [ ];
+          Mod+Shift+H { move-column-left; }
+          Mod+Shift+L { move-column-right; }
+          Mod+Shift+J { move-window-down-or-to-workspace-down; }
+          Mod+Shift+K { move-window-up-or-to-workspace-up; }
+          Mod+W { toggle-column-tabbed-display; }
+          Mod+Shift+Comma { consume-window-into-column; }
+          Mod+Shift+Period { expel-window-from-column; }
 
-          # Workspaces
-          "Mod+1".action.focus-workspace = 1;
-          "Mod+2".action.focus-workspace = 2;
-          "Mod+3".action.focus-workspace = 3;
-          "Mod+4".action.focus-workspace = 4;
-          "Mod+5".action.focus-workspace = 5;
-          "Mod+6".action.focus-workspace = 6;
-          "Mod+7".action.focus-workspace = 7;
-          "Mod+8".action.focus-workspace = 8;
-          "Mod+9".action.focus-workspace = 9;
+          Mod+BracketRight { focus-monitor-right; }
+          Mod+BracketLeft { focus-monitor-left; }
+          Mod+Shift+BracketRight { move-column-to-monitor-right; }
+          Mod+Shift+BracketLeft { move-column-to-monitor-left; }
 
-          "Mod+Shift+1".action.move-column-to-workspace = 1;
-          "Mod+Shift+2".action.move-column-to-workspace = 2;
-          "Mod+Shift+3".action.move-column-to-workspace = 3;
-          "Mod+Shift+4".action.move-column-to-workspace = 4;
-          "Mod+Shift+5".action.move-column-to-workspace = 5;
-          "Mod+Shift+6".action.move-column-to-workspace = 6;
-          "Mod+Shift+7".action.move-column-to-workspace = 7;
-          "Mod+Shift+8".action.move-column-to-workspace = 8;
-          "Mod+Shift+9".action.move-column-to-workspace = 9;
+          Mod+Minus { set-column-width "-10%"; }
+          Mod+Equal { set-column-width "+10%"; }
+          Mod+M { maximize-column; }
 
-          "Mod+Escape".action.toggle-overview = [ ];
-        };
+          Mod+1 { focus-workspace 1; }
+          Mod+2 { focus-workspace 2; }
+          Mod+3 { focus-workspace 3; }
+          Mod+4 { focus-workspace 4; }
+          Mod+5 { focus-workspace 5; }
+          Mod+6 { focus-workspace 6; }
+          Mod+7 { focus-workspace 7; }
+          Mod+8 { focus-workspace 8; }
+          Mod+9 { focus-workspace 9; }
 
-        outputs = let cfg = config.programs.niri.settings.outputs;
-        in {
-          "eDP-1" = {
-            enable = true;
-            mode.width = 3840;
-            mode.height = 2160;
-            mode.refresh = 60.0;
-            position.x = 2560;
-            position.y = 0;
-          };
-          "GIGA-BYTE TECHNOLOGY CO., LTD. M28U 21430B002974" = {
-            enable = true;
-            mode.width = 2560;
-            mode.height = 1440;
-            mode.refresh = 59.951;
-            position.x = 0;
-            position.y = 0;
-            scale = 1;
-          };
-        };
+          Mod+Shift+1 { move-column-to-workspace 1; }
+          Mod+Shift+2 { move-column-to-workspace 2; }
+          Mod+Shift+3 { move-column-to-workspace 3; }
+          Mod+Shift+4 { move-column-to-workspace 4; }
+          Mod+Shift+5 { move-column-to-workspace 5; }
+          Mod+Shift+6 { move-column-to-workspace 6; }
+          Mod+Shift+7 { move-column-to-workspace 7; }
+          Mod+Shift+8 { move-column-to-workspace 8; }
+          Mod+Shift+9 { move-column-to-workspace 9; }
 
-        window-rules = [{
-          matches = [{ app-id = "^emacs$"; }];
-          default-column-width = { proportion = 0.8; };
-        }];
-      };
-    };
+          Mod+Escape { toggle-overview; }
+      }
+    '';
 
     stylix.targets.waybar = {
       enable = true;
@@ -228,10 +319,7 @@
       }];
     };
 
-    home.packages = with pkgs; [
-      pkgs.swaybg
-      # pkgs.xwayland-satellite
-    ];
+    home.packages = with pkgs; [ pkgs.swaybg pkgs.xwayland-satellite ];
 
   };
 }
