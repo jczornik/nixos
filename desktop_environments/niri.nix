@@ -143,7 +143,7 @@
       }
 
       output "eDP-1" {
-          mode "3840x2160@60.0"
+          mode "1920x1080@60.0"
           position x=2560 y=0
       }
 

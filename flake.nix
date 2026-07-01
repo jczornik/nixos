@@ -22,7 +22,7 @@
       jczornik-gli = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/gli-laptop/configuration.nix
+          ./hosts/gli-laptop-l14/configuration.nix
           stylix.nixosModules.stylix
 
           ({ config, pkgs, ... }: {
