@@ -4,7 +4,7 @@
   options.custom.desktop.sway.enable =
     lib.mkEnableOption "Sway Wayland Compositor";
 
-  config = lib.mkIf config.custom.desktop.niri.enable {
+  config = lib.mkIf config.custom.desktop.sway.enable {
     wayland.windowManager.sway = {
       enable = true;
       systemd.enable = true;

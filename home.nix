@@ -1,16 +1,19 @@
 let assignWorkspaces = import "./assignWorkspaces.nix";
-in { config, lib, pkgs, inputs, stylix, ... }:
+in { config, lib, pkgs, inputs, stylix, niri, ... }:
 
 {
   imports = [
+    inputs.niri.homeModules.niri
     ./desktop_environments/niri.nix
-    # ./desktop_environments/sway.nix
+    ./desktop_environments/sway.nix
+    ./mail/microslop.nix
   ];
 
   home.sessionVariables = {
     # NIXOS_OZONE_WL = "1";
     EDITOR = "emacsclient -c";
     LIBVA_DRIVER_NAME = "iHD";
+    BROWSER = "google-chrome-stable";
   };
   home.packages = with pkgs; [
     alacritty
@@ -39,11 +42,26 @@ in { config, lib, pkgs, inputs, stylix, ... }:
     zoxide
     jq
     copilot-language-server
+    gcc
+    gnumake
+    binutils
+    xdg-utils
   ];
 
-  custom.desktop.niri.enable = true;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "google-chrome.desktop";
+      "x-scheme-handler/http" = "google-chrome.desktop";
+      "x-scheme-handler/https" = "google-chrome.desktop";
+      "x-scheme-handler/about" = "google-chrome.desktop";
+      "x-scheme-handler/unknown" = "google-chrome.desktop";
+    };
+  };
 
-  gtk.gtk4.theme = null;
+  custom.desktop.niri.enable = true;
+  custom.desktop.sway.enable = true;
+  custom.mail.microslop.enable = false;
 
   services.dunst.enable = true;
 
@@ -138,6 +156,12 @@ in { config, lib, pkgs, inputs, stylix, ... }:
   programs.emacs = {
     enable = true;
     package = pkgs.emacs-pgtk;
+    extraPackages = epkgs: [
+      # List the specific grammars you need
+      # pkgs.tree-sitter-grammars.tree-sitter-bash
+      # pkgs.tree-sitter-grammars.tree-sitter-python
+      # pkgs.tree-sitter-grammars.tree-sitter-nix
+    ];
   };
 
   services.emacs = {

@@ -31,7 +31,8 @@
       useTextGreeter = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --cmd niri-session";
+          # command = "${pkgs.tuigreet}/bin/tuigreet --cmd niri-session";
+          command = "${pkgs.tuigreet}/bin/tuigreet --cmd 'niri-session -l'";
         };
       };
     };
@@ -44,25 +45,23 @@
     xdg.autostart.enable = true;
     xdg.portal = {
       enable = true;
-      # wlr.enable = true;
-      # xdgOpenUsePortal = true;
-      # extraPortals = [
-      #   pkgs.xdg-desktop-portal
-      #   pkgs.xdg-desktop-portal-gtk
-      #   pkgs.xdg-desktop-portal-gnome
-      # ];
-      # config = {
-      #   common = { default = "*"; };
-      #   niri = {
-      #     # Use GTK for standard things (like the file picker and dark mode settings)
-      #     default = [ "gtk" ];
-      #     # Explicitly use GNOME *only* for screen sharing and screenshots
-      #     "org.freedesktop.impl.portal.Screencast" = [ "gnome" ];
-      #     "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
-      #     # "org.freedesktop.impl.portal.FileChooser" = [ "gtk" "wlr" ];
-      #     "org.freedesktop.impl.portal.OpenURI" = [ "gtk" "wlr" ];
-      #   };
-      # };
+      wlr.enable = true;
+      xdgOpenUsePortal = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-gnome
+      ];
+      config = {
+        common = { default = "*"; };
+        # niri = {
+        #   default = [ "gtk" ];
+        #   "org.freedesktop.impl.portal.Screencast" = [ "gnome" ];
+        #   "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
+        #   # Fallback to the default (gtk) for URI opening, remove "wlr"
+        #   "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+        # };
+      };
     };
 
     environment.systemPackages = [ pkgs.tuigreet ];

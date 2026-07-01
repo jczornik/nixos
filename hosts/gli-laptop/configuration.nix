@@ -70,7 +70,13 @@
   services.thinkfan = {
     enable = true;
     levels = [
-      [ "level auto" 0 3000 ]
+      [ 0  0  50 ]  # Fan off until 55°C
+      [ 1  40 55 ]  # Level 1 kicks in at 55°C, drops back to 0 at 48°C
+      [ 2  45 60 ]
+      [ 3  50 65 ]
+      [ 6  55 75 ]
+      [ 7  60 80 ]
+      [ "level full-speed" 78 32767 ] # Maximum effort
     ];
   };
 

@@ -7,14 +7,17 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    stylix.url = "github:nix-community/stylix";
-    # niri = {
-    #   url = "github:sodiboo/niri-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, stylix, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, stylix, niri, ... }: {
     nixosConfigurations = {
       jczornik-gli = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -22,9 +25,9 @@
           ./hosts/gli-laptop/configuration.nix
           stylix.nixosModules.stylix
 
-          # ({ config, pkgs, ... }: {
-          #   nixpkgs.overlays = [ niri.overlays.niri ];
-          # })
+          ({ config, pkgs, ... }: {
+            nixpkgs.overlays = [ niri.overlays.niri ];
+          })
 
           home-manager.nixosModules.home-manager
           {

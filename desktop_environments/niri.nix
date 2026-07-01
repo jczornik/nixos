@@ -1,12 +1,13 @@
-{ config, lib, pkgs, stylix, ... }:
+{ config, lib, pkgs, stylix, niri, ... }:
 
 {
   options.custom.desktop.niri.enable =
     lib.mkEnableOption "Niri Wayland Compositor";
 
   config = lib.mkIf config.custom.desktop.niri.enable {
-    # programs.niri = {
-    #   enable = true;
+    programs.niri = {
+      enable = true;
+    };
     #   # package = pkgs.niri-unstable;
     #   settings = {
     #     prefer-no-csd = true;
@@ -34,69 +35,69 @@
 
     #     input.keyboard.xkb = { layout = "pl"; };
 
-    #     binds = {
-    #       # Programs
-    #       "Mod+Shift+e".action.spawn = [ "emacsclient" "-c" ];
-    #       "Mod+Shift+b".action.spawn = [
-    #         "google-chrome-stable"
-    #         "--ozone-platform-hint=auto"
-    #         "--ignore-gpu-blocklist"
-    #         "--enable-gpu-rasterization"
-    #         "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks"
-    #         "--disable-features=UseChromeOSDirectVideoDecoder"
-    #         "--ozone-platform=wayland"
-    #       ];
-    #       "Mod+Return".action.spawn = "alacritty";
-    #       "Mod+d".action.spawn = [ "rofi" "-show" "combi" ];
-    #       "Mod+Shift+Q".action.close-window = [ ];
+    #     # binds = {
+    #     #   # Programs
+    #     #   "Mod+Shift+e".action.spawn = [ "emacsclient" "-c" ];
+    #     #   "Mod+Shift+b".action.spawn = [
+    #     #     "google-chrome-stable"
+    #     #     "--ozone-platform-hint=auto"
+    #     #     "--ignore-gpu-blocklist"
+    #     #     "--enable-gpu-rasterization"
+    #     #     "--enable-features=AcceleratedVideoDecodeLinuxGL,AcceleratedVideoEncoder,VaapiIgnoreDriverChecks"
+    #     #     "--disable-features=UseChromeOSDirectVideoDecoder"
+    #     #     "--ozone-platform=wayland"
+    #     #   ];
+    #     #   "Mod+Return".action.spawn = "alacritty";
+    #     #   "Mod+d".action.spawn = [ "rofi" "-show" "combi" ];
+    #     #   "Mod+Shift+Q".action.close-window = [ ];
 
-    #       # Movement
-    #       "Mod+h".action.focus-column-left = [ ];
-    #       "Mod+l".action.focus-column-right = [ ];
-    #       "Mod+j".action.focus-window-or-workspace-down = [ ];
-    #       "Mod+k".action.focus-window-or-workspace-up = [ ];
-    #       "Mod+f".action.fullscreen-window = [ ];
+    #     #   # Movement
+    #     #   "Mod+h".action.focus-column-left = [ ];
+    #     #   "Mod+l".action.focus-column-right = [ ];
+    #     #   "Mod+j".action.focus-window-or-workspace-down = [ ];
+    #     #   "Mod+k".action.focus-window-or-workspace-up = [ ];
+    #     #   "Mod+f".action.fullscreen-window = [ ];
 
-    #       "Mod+Shift+h".action.move-column-left = [ ];
-    #       "Mod+Shift+l".action.move-column-right = [ ];
-    #       "Mod+Shift+j".action.move-window-down-or-to-workspace-down = [ ];
-    #       "Mod+Shift+k".action.move-window-up-or-to-workspace-up = [ ];
-    #       "Mod+w".action.toggle-column-tabbed-display = [ ];
-    #       "Mod+Shift+Comma".action.consume-window-into-column = [ ];
-    #       "Mod+Shift+Period".action.expel-window-from-column = [ ];
+    #     #   "Mod+Shift+h".action.move-column-left = [ ];
+    #     #   "Mod+Shift+l".action.move-column-right = [ ];
+    #     #   "Mod+Shift+j".action.move-window-down-or-to-workspace-down = [ ];
+    #     #   "Mod+Shift+k".action.move-window-up-or-to-workspace-up = [ ];
+    #     #   "Mod+w".action.toggle-column-tabbed-display = [ ];
+    #     #   "Mod+Shift+Comma".action.consume-window-into-column = [ ];
+    #     #   "Mod+Shift+Period".action.expel-window-from-column = [ ];
 
-    #       "Mod+BracketRight".action.focus-monitor-right = [ ];
-    #       "Mod+BracketLeft".action.focus-monitor-left = [ ];
-    #       "Mod+Shift+BracketRight".action.move-column-to-monitor-right = [ ];
-    #       "Mod+Shift+BracketLeft".action.move-column-to-monitor-left = [ ];
+    #     #   "Mod+BracketRight".action.focus-monitor-right = [ ];
+    #     #   "Mod+BracketLeft".action.focus-monitor-left = [ ];
+    #     #   "Mod+Shift+BracketRight".action.move-column-to-monitor-right = [ ];
+    #     #   "Mod+Shift+BracketLeft".action.move-column-to-monitor-left = [ ];
 
-    #       "Mod+Minus".action.set-column-width = "-10%";
-    #       "Mod+Equal".action.set-column-width = "+10%";
-    #       "Mod+m".action.maximize-column = [ ];
+    #     #   "Mod+Minus".action.set-column-width = "-10%";
+    #     #   "Mod+Equal".action.set-column-width = "+10%";
+    #     #   "Mod+m".action.maximize-column = [ ];
 
-    #       # Workspaces
-    #       "Mod+1".action.focus-workspace = 1;
-    #       "Mod+2".action.focus-workspace = 2;
-    #       "Mod+3".action.focus-workspace = 3;
-    #       "Mod+4".action.focus-workspace = 4;
-    #       "Mod+5".action.focus-workspace = 5;
-    #       "Mod+6".action.focus-workspace = 6;
-    #       "Mod+7".action.focus-workspace = 7;
-    #       "Mod+8".action.focus-workspace = 8;
-    #       "Mod+9".action.focus-workspace = 9;
+    #     #   # Workspaces
+    #     #   "Mod+1".action.focus-workspace = 1;
+    #     #   "Mod+2".action.focus-workspace = 2;
+    #     #   "Mod+3".action.focus-workspace = 3;
+    #     #   "Mod+4".action.focus-workspace = 4;
+    #     #   "Mod+5".action.focus-workspace = 5;
+    #     #   "Mod+6".action.focus-workspace = 6;
+    #     #   "Mod+7".action.focus-workspace = 7;
+    #     #   "Mod+8".action.focus-workspace = 8;
+    #     #   "Mod+9".action.focus-workspace = 9;
 
-    #       "Mod+Shift+1".action.move-column-to-workspace = 1;
-    #       "Mod+Shift+2".action.move-column-to-workspace = 2;
-    #       "Mod+Shift+3".action.move-column-to-workspace = 3;
-    #       "Mod+Shift+4".action.move-column-to-workspace = 4;
-    #       "Mod+Shift+5".action.move-column-to-workspace = 5;
-    #       "Mod+Shift+6".action.move-column-to-workspace = 6;
-    #       "Mod+Shift+7".action.move-column-to-workspace = 7;
-    #       "Mod+Shift+8".action.move-column-to-workspace = 8;
-    #       "Mod+Shift+9".action.move-column-to-workspace = 9;
+    #     #   "Mod+Shift+1".action.move-column-to-workspace = 1;
+    #     #   "Mod+Shift+2".action.move-column-to-workspace = 2;
+    #     #   "Mod+Shift+3".action.move-column-to-workspace = 3;
+    #     #   "Mod+Shift+4".action.move-column-to-workspace = 4;
+    #     #   "Mod+Shift+5".action.move-column-to-workspace = 5;
+    #     #   "Mod+Shift+6".action.move-column-to-workspace = 6;
+    #     #   "Mod+Shift+7".action.move-column-to-workspace = 7;
+    #     #   "Mod+Shift+8".action.move-column-to-workspace = 8;
+    #     #   "Mod+Shift+9".action.move-column-to-workspace = 9;
 
-    #       "Mod+Escape".action.toggle-overview = [ ];
-    #     };
+    #     #   "Mod+Escape".action.toggle-overview = [ ];
+    #     # };
 
     #     outputs = let cfg = config.programs.niri.settings.outputs;
     #     in {
@@ -131,6 +132,7 @@
 
       spawn-at-startup "${pkgs.waybar}/bin/waybar"
       spawn-at-startup "${pkgs.swaybg}/bin/swaybg" "-m" "fill" "-i" "${config.stylix.image}"
+      spawn-at-startup "bash" "-c" "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP PATH && systemctl --user restart xdg-desktop-portal.service xdg-desktop-portal-gtk.service xdg-desktop-portal-gnome.service emacs"
 
       input {
           keyboard {
