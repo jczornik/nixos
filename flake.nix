@@ -15,14 +15,18 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    firezone = {
+      url = "github:firezone/firezone/gui-client-1.5.15";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, stylix, niri, ... }: {
+  outputs = inputs@{ nixpkgs, home-manager, stylix, niri, firezone, ... }: {
     nixosConfigurations = {
       jczornik-gli = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/gli-laptop-l14/configuration.nix
+          ./hosts/gli-laptop/configuration.nix
           stylix.nixosModules.stylix
 
           ({ config, pkgs, ... }: {

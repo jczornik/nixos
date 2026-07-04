@@ -1,15 +1,20 @@
-{ config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ./../../system/systemmodules.nix ];
-  nixpkgs.config.permittedInsecurePackages = [
+  imports = [
+    ./hardware-configuration.nix
+    ./../../system/systemmodules.nix
+    inputs.firezone.nixosModules.gui-client
   ];
+  nixpkgs.config.permittedInsecurePackages = [ ];
 
   systemmodules = {
     virtualisation.enable = true;
     bluetooth.enable = true;
     hostname = "jczornik-gli";
   };
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.timeout = 30;
@@ -31,8 +36,7 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
-  nix.settings = {
-  };
+  nix.settings = { };
 
   # system.autoUpgrade.enable = true;
   # system.autoUpgrade.dates = "daily";
@@ -47,12 +51,23 @@
   users.users.jczornik = {
     isNormalUser = true;
     shell = pkgs.bash;
-    extraGroups = [ "wheel" "docker" "networkmanager" "firezone" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [
+      "wheel"
+      "docker"
+      "networkmanager"
+      "firezone"
+    ]; # Enable ‘sudo’ for the user.
   };
 
   fonts = {
     enableDefaultPackages = true;
-    packages = with pkgs; [ font-awesome ubuntu-classic roboto dejavu_fonts nerd-fonts.symbols-only];
+    packages = with pkgs; [
+      font-awesome
+      ubuntu-classic
+      roboto
+      dejavu_fonts
+      nerd-fonts.symbols-only
+    ];
   };
 
   programs.gnupg.agent = {
@@ -63,19 +78,18 @@
   programs.steam.enable = true;
   services.firezone.gui-client = {
     enable = true;
-    name = "jczonik-gli-client";
     allowedUsers = [ "jczornik" ];
   };
 
   services.thinkfan = {
     enable = true;
     levels = [
-      [ 0  0  50 ]  # Fan off until 55°C
-      [ 1  40 55 ]  # Level 1 kicks in at 55°C, drops back to 0 at 48°C
-      [ 2  45 60 ]
-      [ 3  50 65 ]
-      [ 6  55 75 ]
-      [ 7  60 80 ]
+      [ 0 0 50 ] # Fan off until 55°C
+      [ 1 40 55 ] # Level 1 kicks in at 55°C, drops back to 0 at 48°C
+      [ 2 45 60 ]
+      [ 3 50 65 ]
+      [ 6 55 75 ]
+      [ 7 60 80 ]
       [ "level full-speed" 78 32767 ] # Maximum effort
     ];
   };
@@ -85,10 +99,12 @@
     ports = [ 22 ];
     settings = {
       PasswordAuthentication = true;
-      AllowUsers = null; # Allows all users by default. Can be [ "user1" "user2" ]
+      AllowUsers =
+        null; # Allows all users by default. Can be [ "user1" "user2" ]
       UseDns = true;
       X11Forwarding = false;
-      PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
+      PermitRootLogin =
+        "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
     };
   };
 
@@ -98,34 +114,31 @@
     nfs-utils
   ];
 
-
   networking.modemmanager.enable = true;
   networking.networkmanager.enable = true;
   networking.networkmanager.dns = "systemd-resolved";
   services.resolved.enable = true;
 
-
   hardware.enableRedistributableFirmware = true;
-  services.xserver.videoDrivers = ["modesetting" "nvidia"];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
-    prime = {
-      offload.enable = true;
-      offload.enableOffloadCmd = true;
-      # sync.enable = false;
-		  intelBusId = "PCI:0:2:0";
-		  nvidiaBusId = "PCI:45:0:0";
-	  };
-  };
+  # services.xserver.videoDrivers = [ "modesetting" "nvidia" ];
+  # hardware.nvidia = {
+  #   modesetting.enable = true;
+  #   powerManagement.enable = false;
+  #   powerManagement.finegrained = false;
+  #   open = false;
+  #   nvidiaSettings = true;
+  #   package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
+  #   prime = {
+  #     offload.enable = true;
+  #     offload.enableOffloadCmd = true;
+  #     # sync.enable = false;
+  #     intelBusId = "PCI:0:2:0";
+  #     nvidiaBusId = "PCI:45:0:0";
+  #   };
+  # };
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
-      nvidia-vaapi-driver
       intel-media-driver # LIBVA_DRIVER_NAME=iHD
       intel-vaapi-driver
       libvdpau-va-gl
@@ -145,7 +158,8 @@
 
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    base16Scheme =
+      "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
     image = pkgs.fetchurl {
       url = "https://gruvbox-wallpapers.pages.dev/wallpapers/mix/1.jpg";
       hash = "sha256-24PfrrLDxLcjJIrPGj1/qoIBgsV8Xmv3YcjeTkwnYJg=";

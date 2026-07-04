@@ -18,7 +18,7 @@ in { config, lib, pkgs, inputs, stylix, niri, ... }:
   home.packages = with pkgs; [
     alacritty
     git
-    nixfmt-classic
+    nixfmt
     xfce.thunar
     unzip
     google-chrome
